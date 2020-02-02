@@ -10,8 +10,9 @@ class ResponseAnalysis(Resource):
         optimal_text = request.json['optimal_text']
         sentiment_analysis, targetting_analysis = analyze(
             actual_text, optimal_text)
+        print(sentiment_analysis)
+        print(targetting_analysis)
         return {
-            'sentiment_analysis': sentiment_analysis,
-            'targetting_analysis': targetting_analysis,
-            'text': actual_text
+            'sentiment_analysis': str(sentiment_analysis),
+            'targetting_analysis': str(targetting_analysis),
         }

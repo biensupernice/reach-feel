@@ -1,4 +1,3 @@
-# %%
 import numpy as np
 import tensorflow as tf
 import tensorflow_hub as hub
@@ -24,7 +23,8 @@ def process_text(text):
     text = re.sub(r'#+', ' ', text)
     text = re.sub(r'@[A-Za-z0-9]+', ' ', text)
     text = re.sub(r"([A-Za-z]+)'s", r"\1 is", text)
-    # text = re.sub(r"\'s", " ", text)     text = re.sub(r"\'ve", " have ", text)
+    text = re.sub(r"\'s", " ", text)
+    text = re.sub(r"\'ve", " have ", text)
     text = re.sub(r"won't", "will not ", text)
     text = re.sub(r"isn't", "is not ", text)
     text = re.sub(r"can't", "can not ", text)
@@ -59,9 +59,14 @@ def process_all(text, stop_words):
 def get_features(texts):
     if type(texts) is str:
         texts = [texts]
-    with tf.Session() as sess:
-        sess.run([tf.global_variables_initializer(), tf.tables_initializer()])
-        return sess.run(embed(texts))
+    g = tf.Graph()
+    with g.as_default():
+        module_url = "https://tfhub.dev/google/universal-sentence-encoder-large/3"
+        embed = hub.Module(module_url)
+        with tf.Session(graph=g) as sess:
+            sess.run([tf.global_variables_initializer(),
+                      tf.tables_initializer()])
+            return sess.run(embed(texts))
 
 
 def get_similarity(text_a, text_b):
@@ -81,5 +86,4 @@ def cosine_similarity(v1, v2):
 def test_similiarity(text1, text2):
     vec1 = get_features(text1)[0]
     vec2 = get_features(text2)[0]
-    print(vec1.shape)
     return cosine_similarity(vec1, vec2)
