@@ -6,8 +6,12 @@ from analyzer import analyze
 
 class ResponseAnalysis(Resource):
     def post(self):
-        text = request.json['text']
+        actual_text = request.json['actual_text']
+        optimal_text = request.json['optimal_text']
+        sentiment_analysis, targetting_analysis = analyze(
+            actual_text, optimal_text)
         return {
-            'analysis': analyze(text),
-            'text': text
+            'sentiment_analysis': sentiment_analysis,
+            'targetting_analysis': targetting_analysis,
+            'text': actual_text
         }
