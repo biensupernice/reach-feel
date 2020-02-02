@@ -1,7 +1,0 @@
-.idea/*
-.ipynb_checkpoints/
-*.pyc
-*.swp
-.DS_Store
-*.zip
-upload_lambda_s3.sh
